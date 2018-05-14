@@ -1,20 +1,114 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div>
+<h3>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/home">SKILLMAPPER</a>
+      </div>
 
+      <div class="nav navbar-nav">
+
+        <li class="active" *ngIf="user">
+          <a routerLink="/home">Home</a>
+
+        </li>
+        <li class="dropdown" *ngIf="user">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <ng-container *ngIf="user.role=='HR'">
+                <a routerLink="/listuser">List User</a>
+              </ng-container>
+            </li>
+
+            <li>
+              <ng-container *ngIf="user.role=='HR'">
+                <a routerLink="approve">Approve Profile</a>
+              </ng-container>
+            </li>
+
+            <li *ngIf="user">
+              <ng-container *ngIf="user.role=='EMPLOYEE'">
+                <a routerLink="viewprofile/{{user.emailID}}">View Profile</a>
+              </ng-container>
+            </li>
+
+            <li *ngIf="user">
+              <ng-container *ngIf="user.role=='EMPLOYEE'">
+                <a routerLink="updateprofile/{{user.emailID}}">Update Profile</a>
+              </ng-container>
+            </li> 
+
+
+            <li *ngIf="user">
+             <ng-container *ngIf="user.role=='EMPLOYER'">
+              <a routerLink="/search">Search</a>
+            </ng-container>
+            </li>
+          </ul>
+        </li>
+
+
+
+        <li>
+          <a routerLink="mentor">Mentors</a>
+        </li>
+
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+
+        <li *ngIf="user">
+          <p class="text-right text-primary"> Welcome {{user.firstName}}</p>
+        </li>
+        <li *ngIf="!user">
+          <a routerLink="/register">
+            <span class="glyphicon glyphicon-user"></span> Sign Up</a>
+        </li>
+        <li *ngIf="!user">
+          <a routerLink="/login">
+            <span class="glyphicon glyphicon-log-in"></span> Login</a>
+        </li>
+        <li *ngIf="user">
+          <a>
+            <span class="glyphicon glyphicon-log-out" (click)=logout()></span> Logout</a>
+        </li>
+      </ul>
+    </div>
+
+  </nav>
+
+
+  <div *ngIf="user">
+    <div class="media">
+      <div class="media-left">
+        {{user.imageName}}
+        <!-- <img src="domSanitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,{binary {{image}}}')" /> -->
+        <!-- <img src="unsafe:data:image/jpeg;base64,{binary '{{image}}'}" id="photo-id"/> -->
+        <div *ngIf="user.imageName===null">
+            <img src="../assets/images/noimage.png" class="media-object img-rounded" style="width:150px;height:150px;">
+        </div>
+       <!--  <ng-template *ngIf="user.imageName!==null; else noImageFound">  -->
+         <div *ngIf="user.imageName!=null">
+        <img [src]="user.profilepic"
+      alt="Profile Image" *ngIf="!isImageLoading; else noImageFound" class="media-object img-rounded" style="width:150px;height:150px;">
+         </div>
+      <!-- <ng-template #noImageFound>
+        <img src="../assets/images/noimage.png" class="media-object img-rounded" style="width:150px;height:150px;">
+      </ng-template> -->
+      
+      </div>
+      <div class="media-body">
+        <h1 class="media-heading">{{user.firstName}} {{user.lastName}}</h1>
+        <p>
+          <i>
+            <h4>{{user.role}}</h4>
+          </i>
+        </p>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <router-outlet></router-outlet>
